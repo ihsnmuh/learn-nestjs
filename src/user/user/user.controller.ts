@@ -8,15 +8,33 @@ import {
   Post,
   Query,
   Redirect,
+  Req,
+  Res,
 } from '@nestjs/common';
+import { Request, Response } from 'express';
 
 @Controller('/api/users')
 export class UserController {
+  // * Set Cookie
+  @Get('/set-cookie')
+  //? decorator @Req/@Res because only using in express
+  setCookie(@Query('name') name: string, @Res() response: Response) {
+    response.cookie('name', name);
+    response.status(200).send('Success set Cookie');
+  }
+
+  // * Get Cookie
+  @Get('/get-cookie')
+  //? decorator @Req/@Res because only using in express
+  getCookie(@Req() request: Request): string {
+    return request.cookies['name'];
+  }
+
   // * http response decorator Header() HttpCode()
   @Get('/sample-response')
   @Header('Content-Type', 'application/json')
   @HttpCode(200)
-  saampleRespose(): Record<string, string> {
+  sampleRespose(): Record<string, string> {
     return {
       data: 'Hello json',
     };
